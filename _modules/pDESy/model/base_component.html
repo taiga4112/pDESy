@@ -1,0 +1,471 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html4" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pDESy.model.base_component &mdash; pDESy 0.2.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> pDESy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../pDESy.html">pDESy package</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pDESy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>pDESy.model.base_component</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pDESy.model.base_component</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">abc</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+
+
+<div class="viewcode-block" id="BaseComponent"><a class="viewcode-back" href="../../../pDESy.model.html#pDESy.model.base_component.BaseComponent">[docs]</a><span class="k">class</span> <span class="nc">BaseComponent</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;BaseComponent</span>
+<span class="sd">    BaseComponent class for expressing target product.</span>
+<span class="sd">    This class will be used as template.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str):</span>
+<span class="sd">            Basic parameter.</span>
+<span class="sd">            Name of this component.</span>
+<span class="sd">        ID (str, optional):</span>
+<span class="sd">            Basic parameter.</span>
+<span class="sd">            ID will be defined automatically.</span>
+<span class="sd">            Defaults to None.</span>
+<span class="sd">        parent_component_list(List[BaseComponent], optional):</span>
+<span class="sd">            Basic parameter.</span>
+<span class="sd">            List of parent BaseComponents. Defaults to None.</span>
+<span class="sd">        child_component_list (List[BaseComponent], optional):</span>
+<span class="sd">            Basic parameter.</span>
+<span class="sd">            List of child BaseComponents.</span>
+<span class="sd">            Defaults to None.</span>
+<span class="sd">        targeted_task_list (List[BaseTask], optional):</span>
+<span class="sd">            Basic parameter.</span>
+<span class="sd">            List of targeted tasks.</span>
+<span class="sd">            Defaults to None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="c1"># Basic parameters</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">ID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">parent_component_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">child_component_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">targeted_task_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+
+        <span class="c1"># ----</span>
+        <span class="c1"># Constraint parameter on simulation</span>
+        <span class="c1"># --</span>
+        <span class="c1"># Basic parameter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ID</span> <span class="o">=</span> <span class="n">ID</span> <span class="k">if</span> <span class="n">ID</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="n">parent_component_list</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parent_component_list</span> <span class="o">=</span> <span class="n">parent_component_list</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parent_component_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="n">child_component_list</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">child_component_list</span> <span class="o">=</span> <span class="n">child_component_list</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">child_component_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="n">targeted_task_list</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">targeted_task_list</span> <span class="o">=</span> <span class="n">targeted_task_list</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">targeted_task_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="BaseComponent.extend_child_component_list"><a class="viewcode-back" href="../../../pDESy.model.html#pDESy.model.base_component.BaseComponent.extend_child_component_list">[docs]</a>    <span class="k">def</span> <span class="nf">extend_child_component_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">child_component_list</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extend the list of child components</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            child_component_list (List[BaseComponent]):</span>
+<span class="sd">                List of child BaseComponents</span>
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; c = BaseComponent(&#39;c&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; print([child_c.name for child_c in c.child_component_list])</span>
+<span class="sd">            []</span>
+<span class="sd">            &gt;&gt;&gt; c.extend_child_component_list([BaseComponent(&#39;c1&#39;),BaseComponent(&#39;c2&#39;)])</span>
+<span class="sd">            &gt;&gt;&gt; print([child_c.name for child_c in c.child_component_list])</span>
+<span class="sd">            [&#39;c1&#39;, &#39;c2&#39;]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">child_c</span> <span class="ow">in</span> <span class="n">child_component_list</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">append_child_component</span><span class="p">(</span><span class="n">child_c</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseComponent.append_child_component"><a class="viewcode-back" href="../../../pDESy.model.html#pDESy.model.base_component.BaseComponent.append_child_component">[docs]</a>    <span class="k">def</span> <span class="nf">append_child_component</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">child_component</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Append child component</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            child_component (BaseComponent):</span>
+<span class="sd">                Child BaseComponent</span>
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; c = BaseComponent(&#39;c&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; print([child_c.name for child_c in c.child_component_list])</span>
+<span class="sd">            []</span>
+<span class="sd">            &gt;&gt;&gt; c1 = BaseComponent(&#39;c1&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; c.append_child_component(c1)</span>
+<span class="sd">            &gt;&gt;&gt; print([child_c.name for child_c in c.child_component_list])</span>
+<span class="sd">            [&#39;c1&#39;]</span>
+<span class="sd">            &gt;&gt;&gt; print([parent_c.name for parent_c in c1.parent_component_list])</span>
+<span class="sd">            [&#39;c&#39;]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">child_component_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child_component</span><span class="p">)</span>
+        <span class="n">child_component</span><span class="o">.</span><span class="n">parent_component_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseComponent.extend_targeted_task_list"><a class="viewcode-back" href="../../../pDESy.model.html#pDESy.model.base_component.BaseComponent.extend_targeted_task_list">[docs]</a>    <span class="k">def</span> <span class="nf">extend_targeted_task_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">targeted_task_list</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extend the list of targeted tasks</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            targeted_task_list (List[BaseTask]):</span>
+<span class="sd">                List of targeted tasks</span>
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; c = BaseComponent(&#39;c&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; print([targeted_t.name for targeted_t in c.targeted_task_list])</span>
+<span class="sd">            []</span>
+<span class="sd">            &gt;&gt;&gt; c.extend_targeted_task_list([BaseTask(&#39;t1&#39;),BaseTask(&#39;t2&#39;)])</span>
+<span class="sd">            &gt;&gt;&gt; print([targeted_t.name for targeted_t in c.targeted_task_list])</span>
+<span class="sd">            [&#39;t1&#39;, &#39;t2&#39;]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">targeted_task</span> <span class="ow">in</span> <span class="n">targeted_task_list</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">append_targeted_task</span><span class="p">(</span><span class="n">targeted_task</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseComponent.append_targeted_task"><a class="viewcode-back" href="../../../pDESy.model.html#pDESy.model.base_component.BaseComponent.append_targeted_task">[docs]</a>    <span class="k">def</span> <span class="nf">append_targeted_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">targeted_task</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Append targeted task</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            targeted_task (BaseTask):</span>
+<span class="sd">                Targeted task</span>
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; c = BaseComponent(&#39;c&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; print([targeted_t.name for targeted_t in c.targeted_task_list])</span>
+<span class="sd">            []</span>
+<span class="sd">            &gt;&gt;&gt; t1 = BaseTask(&#39;t1&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; c.append_targeted_task(t1)</span>
+<span class="sd">            &gt;&gt;&gt; print([targeted_t.name for targeted_t in c.targeted_task_list])</span>
+<span class="sd">            [&#39;t1&#39;]</span>
+<span class="sd">            &gt;&gt;&gt; print([target_c.name for target_c in t1.target_component_list])</span>
+<span class="sd">            [&#39;c&#39;]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">targeted_task_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">targeted_task</span><span class="p">)</span>
+        <span class="n">targeted_task</span><span class="o">.</span><span class="n">target_component_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+    <span class="c1"># def get_state_record_list(self, auto_task=False):</span>
+    <span class="c1">#     &quot;&quot;&quot;</span>
+    <span class="c1">#     Get state record list of this component.</span>
+
+    <span class="c1">#     Args:</span>
+    <span class="c1">#         auto_task (bool, optional):</span>
+    <span class="c1">#             Include auto_task or not.</span>
+    <span class="c1">#             Defaults to False.</span>
+
+    <span class="c1">#     Returns:</span>
+    <span class="c1">#         List(BaseTaskState): state time list of this component.</span>
+    <span class="c1">#     &quot;&quot;&quot;</span>
+    <span class="c1">#     target_task_list = self.targeted_task_list</span>
+    <span class="c1">#     if not auto_task:</span>
+    <span class="c1">#         target_task_list = list(</span>
+    <span class="c1">#             filter(lambda task: not task.auto_task, self.targeted_task_list)</span>
+    <span class="c1">#         )</span>
+    <span class="c1">#     finish_time = max(map(lambda t: max(t.finish_time_list), target_task_list))</span>
+
+    <span class="c1">#     state_record = []</span>
+    <span class="c1">#     for time in range(finish_time + 1):</span>
+    <span class="c1">#         task_state_list = list(</span>
+    <span class="c1">#             map(lambda task: task.get_state_from_record(time), target_task_list)</span>
+    <span class="c1">#         )</span>
+
+    <span class="c1">#         print(time, task_state_list)</span>
+
+    <span class="c1">#         if task_state_list.count(BaseTaskState.FINISHED) == len(task_state_list):</span>
+    <span class="c1">#             # Only FINIHSED -&gt; FINISHED</span>
+    <span class="c1">#             state_record.append(BaseTaskState.FINISHED)</span>
+    <span class="c1">#         elif task_state_list.count(BaseTaskState.NONE) + task_state_list.count(</span>
+    <span class="c1">#             BaseTaskState.FINISHED</span>
+    <span class="c1">#         ) == len(task_state_list):</span>
+    <span class="c1">#             # Only NONE or FINISHIED -&gt; NONE</span>
+    <span class="c1">#             state_record.append(BaseTaskState.NONE)</span>
+    <span class="c1">#         elif task_state_list.count(BaseTaskState.WORKING) &gt; 0:</span>
+    <span class="c1">#             # if one more WORKING are existed -&gt; WOKRKING</span>
+    <span class="c1">#             state_record.append(BaseTaskState.WORKING)</span>
+    <span class="c1">#         elif task_state_list.count(BaseTaskState.READY) &gt; 0:</span>
+    <span class="c1">#             state_record.append(BaseTaskState.READY)</span>
+    <span class="c1">#         else:</span>
+    <span class="c1">#             state_record.append(None)</span>
+
+    <span class="c1">#     return state_record</span>
+
+    <span class="c1"># def get_ready_start_finish_time_list(self, auto_task=False):</span>
+
+    <span class="c1">#     ready_time_list = []</span>
+    <span class="c1">#     start_time_list = []</span>
+    <span class="c1">#     finish_time_list = []</span>
+
+    <span class="c1">#     state_record = self.get_state_record_list(auto_task=auto_task)</span>
+    <span class="c1">#     print(state_record)</span>
+    <span class="c1">#     if state_record[0] == BaseTaskState.READY:</span>
+    <span class="c1">#         ready_time_list.append(0)</span>
+    <span class="c1">#     elif state_record[0] == BaseTaskState.WORKING:</span>
+    <span class="c1">#         start_time_list.append(0)</span>
+
+    <span class="c1">#     for time in range(len(state_record) - 1):</span>
+    <span class="c1">#         if state_record[time + 1] != state_record[time]:</span>
+    <span class="c1">#             if state_record[time + 1] == BaseTaskState.READY:</span>
+    <span class="c1">#                 ready_time_list.append(time + 1)</span>
+    <span class="c1">#             elif state_record[time + 1] == BaseTaskState.WORKING:</span>
+    <span class="c1">#                 start_time_list.append(time + 1)</span>
+    <span class="c1">#             elif state_record[time + 1] == BaseTaskState.FINISHED:</span>
+    <span class="c1">#                 finish_time_list.append(time + 1)</span>
+
+    <span class="c1">#     return ready_time_list, start_time_list, finish_time_list</span>
+
+<div class="viewcode-block" id="BaseComponent.initialize"><a class="viewcode-back" href="../../../pDESy.model.html#pDESy.model.base_component.BaseComponent.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the changeable variables of BaseComponent</span>
+<span class="sd">        However, there is no initializing variables</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            str: name of BaseComponent</span>
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; c = BaseComponent(&quot;c&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; print(c)</span>
+<span class="sd">            &#39;c&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BaseComponent.create_data_for_gantt_plotly"><a class="viewcode-back" href="../../../pDESy.model.html#pDESy.model.base_component.BaseComponent.create_data_for_gantt_plotly">[docs]</a>    <span class="k">def</span> <span class="nf">create_data_for_gantt_plotly</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">init_datetime</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span>
+        <span class="n">unit_timedelta</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">,</span>
+        <span class="n">finish_margin</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create data for gantt plotly from start_time_list and finish_time_list</span>
+<span class="sd">        of BaseTask in targeted_task_list.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            init_datetime (datetime.datetime):</span>
+<span class="sd">                Start datetime of project</span>
+<span class="sd">            unit_timedelta (datetime.timedelta):</span>
+<span class="sd">                Unit time of simulattion</span>
+<span class="sd">            finish_margin (float, optional):</span>
+<span class="sd">                Margin of finish time in Gantt chart.</span>
+<span class="sd">                Defaults to 1.0.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            list[dict]: Gantt plotly information of this BaseComponent</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="nb">min</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">start_time_list</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">targeted_task_list</span><span class="p">))</span>
+        <span class="n">finish_time</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
+            <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="nb">max</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">finish_time_list</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">targeted_task_list</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="nb">dict</span><span class="p">(</span>
+                <span class="n">Task</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">Start</span><span class="o">=</span><span class="p">(</span><span class="n">init_datetime</span> <span class="o">+</span> <span class="n">start_time</span> <span class="o">*</span> <span class="n">unit_timedelta</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span>
+                    <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span>
+                <span class="p">),</span>
+                <span class="n">Finish</span><span class="o">=</span><span class="p">(</span>
+                    <span class="n">init_datetime</span> <span class="o">+</span> <span class="p">(</span><span class="n">finish_time</span> <span class="o">+</span> <span class="n">finish_margin</span><span class="p">)</span> <span class="o">*</span> <span class="n">unit_timedelta</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">),</span>
+                <span class="n">Type</span><span class="o">=</span><span class="s2">&quot;Component&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">df</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Taiga MITSUYUKI
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
